@@ -19,6 +19,9 @@
                 --bg-color: rgb(0, 0, 0); /* Dunkler Hintergrund im Dunkelmodus */
                 --text-color: white; /* Helle Textfarbe im Dunkelmodus */
             }
+            .contact a:hover {
+                color: rgb(255, 255, 255); /* Hover-Farbe im Dunkelmodus */
+            }
         }
         .name {
             /*font-size: 5vw;*/
@@ -39,7 +42,7 @@
             transition: color 0.3s ease;
         }
         .contact a:hover {
-            color: rgb(255, 255, 255);
+            color: black; /* Standard Hover-Farbe im White-Mode */
         }
         .description {
             margin-top: 10px;
@@ -57,27 +60,49 @@
         .box:hover {
             transform: scale(1.05);
         }
+        .bachelor-thesis,
+        .hbp-activities {
+            display: none; /* Anfangs unsichtbar */
+            font-size: 0.8em;
+        }
+        .hbp:hover .hbp-activities {
+            display: block; /* Einblenden beim Hover */
+        }
     </style>
 </head>
 <body onscroll="scaleText()">
     <div class="name">
         manuel schieder
     </div>
-    <div class="description">master student at universität regensburg for business informatics with focus on cryptography and cybersecurity</div>
+    <div class="description">master student at university of regensburg for business informatics with focus on <span id="cryptography" onmouseover="decryptCryptography()" onmouseout="encryptCryptography()">cryptography</span> and cybersecurity</div>
     <div class="contact">
         <a href="mailto:mail@manuelschieder.de">mail[at]manuelschieder.de</a>
         <a href="https://github.com/manuschieder" target="_blank">GitHub</a>
         <a href="https://www.linkedin.com/in/manuel-schieder-70332022b/" target="_blank">LinkedIn</a>
     </div>
-    <div class="box">
+    <div class="box hbp">
         <h2>work experience</h2>
-        <p>2021 - now: hbp Consulting GmbH & Co KG</p>
+        <p>2021 - now: hbp Consulting GmbH & Co KG <span class="hbp-activities">- it-support, it-administration, inhouse-programming, business intelligence, erp-system-implementation</span></p>
     </div>
     <div class="box">
         <h2>education</h2>
-        <p>2023 - now: M.Sc Wirtschaftsinformatik<br>2019 - 2023: <span onmouseover="this.innerHTML='Bachelor&#39;s thesis: Algorithm Aversion vs. Algorithm Appreciation: When do Humans Prefer Algorithms over Humans?'" onmouseout="this.innerHTML='B.Sc Wirtschaftsinformatik'">B.Sc Wirtschaftsinformatik</span></p>
+        <p>2023 - now: M.Sc Wirtschaftsinformatik<br>2019 - 2023: <span onmouseover="this.querySelector('.bachelor-thesis').style.display = 'inline';" onmouseout="this.querySelector('.bachelor-thesis').style.display = 'none';">B.Sc Wirtschaftsinformatik<span class="bachelor-thesis"> - Bachelor's thesis: Algorithm Aversion vs. Algorithm Appreciation: When do Humans Prefer Algorithms over Humans?</span></span></p>
     </div>
 
+    <script>
+        function encryptCryptography() {
+            var span = document.getElementById('cryptography');
+            span.textContent = "cryptography";
+            var spanText = document.getElementById('cryptographyText');
+            spanText.textContent = "B.Sc Wirtschaftsinformatik";
+        }
 
+        function decryptCryptography() {
+            var span = document.getElementById('cryptography');
+            span.textContent = "bEFD8I+h41rh+h2SNTRDTQ==";
+            var spanText = document.getElementById('cryptographyText');
+            spanText.textContent = "cryptography";
+        }
+    </script>
 </body>
 </html>
