@@ -19,9 +19,6 @@
                 --bg-color: rgb(0, 0, 0); /* Dunkler Hintergrund im Dunkelmodus */
                 --text-color: white; /* Helle Textfarbe im Dunkelmodus */
             }
-            .contact a:hover {
-                color: rgb(255, 255, 255); /* Hover-Farbe im Dunkelmodus */
-            }
         }
         .name {
             /*font-size: 5vw;*/
@@ -42,7 +39,7 @@
             transition: color 0.3s ease;
         }
         .contact a:hover {
-            color: rgb(58, 57, 57); /* Standard Hover-Farbe im White-Mode */
+            color: rgb(255, 255, 255);
         }
         .description {
             margin-top: 10px;
@@ -60,33 +57,82 @@
         .box:hover {
             transform: scale(1.05);
         }
-        .bachelor-thesis,
-        .hbp-activities {
-            display: none; /* Anfangs unsichtbar */
-            font-size: 0.8em;
+
+        /* ---------- Impressum ---------- */
+        details.impressum {
+            margin-top: 10vh;          /* Abstand nach unten */
+            width: 80%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 0.9em;          /* etwas kleiner als Standardtext */
+            color: rgb(203, 203, 203);
         }
-        .hbp:hover .hbp-activities {
-            display: block; /* Einblenden beim Hover */
+        details.impressum summary {
+            list-style: none;          /* Pfeil ausblenden, wirkt „cleaner“ */
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        details.impressum summary:hover {
+            color: rgb(255, 255, 255);
+        }
+        details.impressum[open] {      /* Rahmen nur, wenn ausgeklappt */
+            border: 2px solid rgb(203, 203, 203);
+            padding: 15px;
+        }
+        details.impressum pre {
+            white-space: pre-wrap;     /* lange Zeilen umbrechen */
+            margin: 0;
         }
     </style>
 </head>
 <body onscroll="scaleText()">
+    ... dein bisheriger Inhalt ...
+
+    <!-- ---------- Impressum ---------- -->
+    <details class="impressum">
+        <summary>impressum</summary>
+        <pre>
+Manuel Schieder
+Auf der Reut 3
+92670 Windischeschenbach
+Deutschland
+
+E-Mail: mail@manuelschieder.de
+
+
+Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
+
+        </pre>
+    </details>
+</body>
+</html>
+
+    </style>
+</head>
+<body onscroll="scaleText()">
     <div class="name">
-        manuel schieder
+        Manuel Schieder
     </div>
-    <div class="description">master student at university of regensburg for management information systems with focus on cryptography and cybersecurity</div>
+    <div class="description">master student at universität regensburg for business informatics with focus on cryptography and cybersecurity</div>
     <div class="contact">
         <a href="mailto:mail@manuelschieder.de">mail[at]manuelschieder.de</a>
         <a href="https://github.com/manuschieder" target="_blank">GitHub</a>
         <a href="https://www.linkedin.com/in/manuel-schieder-70332022b/" target="_blank">LinkedIn</a>
     </div>
-    <div class="box hbp">
+    <div class="box">
         <h2>work experience</h2>
-        <span onmouseover="this.querySelector('.hbp-activities').style.display = 'inline';" onmouseout="this.querySelector('.hbp-activities').style.display = 'none';">2021 - now: hbp Consulting GmbH & Co KG<br><span class="hbp-activities"> it-support, it-administration, inhouse-programming, business intelligence, erp-system-implementation</span></span></p>
+        <p>2021 - now: hbp Consulting GmbH & Co KG</p>
     </div>
     <div class="box">
         <h2>education</h2>
-        <p>2023 - now: M.Sc Wirtschaftsinformatik<br>2019 - 2023: <span onmouseover="this.querySelector('.bachelor-thesis').style.display = 'inline';" onmouseout="this.querySelector('.bachelor-thesis').style.display = 'none';">B.Sc Wirtschaftsinformatik<span class="bachelor-thesis"> - Bachelor's thesis: Algorithm Aversion vs. Algorithm Appreciation: When do Humans Prefer Algorithms over Humans?</span></span></p>
+        <p>2023 - now: M.Sc Wirtschaftsinformatik<br>2019 - 2023: <span onmouseover="this.innerHTML='Bachelor&#39;s thesis: Algorithm Aversion vs. Algorithm Appreciation: When do Humans Prefer Algorithms over Humans?'" onmouseout="this.innerHTML='B.Sc Wirtschaftsinformatik'">B.Sc Wirtschaftsinformatik</span></p>
     </div>
+
+
 </body>
 </html>
+
+
