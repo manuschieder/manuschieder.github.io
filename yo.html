@@ -4,97 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>manuel schieder</title>
+
     <style>
+        /* ---------- Grundlayout ---------- */
         body {
             font-family: 'Source Code Pro', monospace;
             text-align: center;
-            --bg-color: white; /* Standard-Hintergrundfarbe */
-            --text-color: black; /* Standard-Textfarbe */
+            --bg-color: white;             /* Standard-Hintergrund */
+            --text-color: black;            /* Standard-Text */
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.5s ease;
         }
         @media (prefers-color-scheme: dark) {
-            body {
-                --bg-color: rgb(0, 0, 0); /* Dunkler Hintergrund im Dunkelmodus */
-                --text-color: white; /* Helle Textfarbe im Dunkelmodus */
+            body {                          /* Dark-Mode */
+                --bg-color: rgb(0, 0, 0);
+                --text-color: white;
             }
         }
-        .name {
-            /*font-size: 5vw;*/
-            font-size: 8vw;
-            margin-top: 20vh;
-        }
+
+        .name   { font-size: 8vw; margin-top: 20vh; }
+        .description { margin-top: 10px; font-size: 1em; }
+
+        /* ---------- Kontaktlinks ---------- */
         .contact {
             margin-top: 5vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: flex; flex-direction: column; align-items: center;
         }
         .contact a {
-            margin: 10px 0;
-            text-decoration: none;
-            color: rgb(203, 203, 203);
-            font-size: 1.1em;
-            transition: color 0.3s ease;
+            margin: 10px 0; text-decoration: none;
+            color: rgb(203,203,203);
+            font-size: 1.1em; transition: color .3s ease;
         }
-        .contact a:hover {
-            color: rgb(255, 255, 255);
-        }
-        .description {
-            margin-top: 10px;
-            font-size: 1em;
-        }
+        .contact a:hover { color: rgb(255,255,255); }
+
+        /* ---------- Infoboxen ---------- */
         .box {
-            border: 2px solid rgb(203, 203, 203);
+            border: 2px solid rgb(203,203,203);
             padding: 15px;
-            margin: 20px auto; /* Mittig ausgerichtet */
-            width: 80%;
-            max-width: 400px;
+            margin: 20px auto;
+            width: 80%; max-width: 400px;
             text-align: left;
-            transition: transform 0.3s ease;
+            transition: transform .3s ease;
         }
-        .box:hover {
-            transform: scale(1.05);
-        }
+        .box:hover { transform: scale(1.05); }
 
         /* ---------- Impressum ---------- */
         details.impressum {
-            margin-top: 10vh;          /* Abstand nach unten */
-            width: 80%;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-            font-size: 0.9em;          /* etwas kleiner als Standardtext */
-            color: rgb(203, 203, 203);
+            margin: 10vh auto 5vh;          /* Abstand darüber + darunter */
+            width: 80%; max-width: 400px;
+            font-size: .9em;
+            color: rgb(203,203,203);
         }
         details.impressum summary {
-            list-style: none;          /* Pfeil ausblenden, wirkt „cleaner“ */
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            transition: color 0.3s ease;
+            list-style: none; cursor: pointer;
+            text-align: center; transition: color .3s ease;
         }
-        details.impressum summary:hover {
-            color: rgb(255, 255, 255);
-        }
-        details.impressum[open] {      /* Rahmen nur, wenn ausgeklappt */
-            border: 2px solid rgb(203, 203, 203);
-            padding: 15px;
+        details.impressum summary:hover { color: rgb(255,255,255); }
+        details.impressum[open] {
+            border: 2px solid rgb(203,203,203); padding: 15px;
         }
         details.impressum pre {
-            white-space: pre-wrap;     /* lange Zeilen umbrechen */
-            margin: 0;
+            white-space: pre-wrap; margin: 0;
         }
     </style>
 </head>
-<body onscroll="scaleText()">
-    ... dein bisheriger Inhalt ...
 
-    <!-- ---------- Impressum ---------- -->
+<body onscroll="scaleText()">
+
+    <!-- ---------- Hauptinhalt ---------- -->
+    <div class="name">manuel schieder</div>
+    <div class="description">
+        master student at universität regensburg for business informatics<br>
+        with focus on cryptography and cybersecurity
+    </div>
+
+    <div class="contact">
+        <a href="mailto:mail@manuelschieder.de">mail[at]manuelschieder.de</a>
+        <a href="https://github.com/manuschieder" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/manuel-schieder-70332022b/" target="_blank">LinkedIn</a>
+    </div>
+
+    <div class="box">
+        <h2>work experience</h2>
+        <p>2021 – now: hbp Consulting GmbH & Co KG</p>
+    </div>
+
+    <div class="box">
+        <h2>education</h2>
+        <p>
+            2023 – now: M.Sc Wirtschaftsinformatik<br>
+            2019 – 2023:
+            <span onmouseover="this.innerHTML='Bachelor&#39;s thesis: Algorithm Aversion vs. Algorithm Appreciation: When do Humans Prefer Algorithms over Humans?'"
+                  onmouseout="this.innerHTML='B.Sc Wirtschaftsinformatik'">
+                  B.Sc Wirtschaftsinformatik
+            </span>
+        </p>
+    </div>
+
+    <!-- ---------- Impressum ganz unten ---------- -->
     <details class="impressum">
         <summary>impressum</summary>
-        <pre>
+<pre>
 Manuel Schieder
 Auf der Reut 3
 92670 Windischeschenbach
@@ -102,36 +113,9 @@ Deutschland
 
 E-Mail: mail@manuelschieder.de
 
-
 Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
-
-        </pre>
+</pre>
     </details>
-</body>
-</html>
-
-    </style>
-</head>
-<body onscroll="scaleText()">
-    <div class="name">
-        Manuel Schieder
-    </div>
-    <div class="description">master student at universität regensburg for business informatics with focus on cryptography and cybersecurity</div>
-    <div class="contact">
-        <a href="mailto:mail@manuelschieder.de">mail[at]manuelschieder.de</a>
-        <a href="https://github.com/manuschieder" target="_blank">GitHub</a>
-        <a href="https://www.linkedin.com/in/manuel-schieder-70332022b/" target="_blank">LinkedIn</a>
-    </div>
-    <div class="box">
-        <h2>work experience</h2>
-        <p>2021 - now: hbp Consulting GmbH & Co KG</p>
-    </div>
-    <div class="box">
-        <h2>education</h2>
-        <p>2023 - now: M.Sc Wirtschaftsinformatik<br>2019 - 2023: <span onmouseover="this.innerHTML='Bachelor&#39;s thesis: Algorithm Aversion vs. Algorithm Appreciation: When do Humans Prefer Algorithms over Humans?'" onmouseout="this.innerHTML='B.Sc Wirtschaftsinformatik'">B.Sc Wirtschaftsinformatik</span></p>
-    </div>
-
 
 </body>
 </html>
-
