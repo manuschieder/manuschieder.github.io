@@ -57,6 +57,59 @@
         .box:hover {
             transform: scale(1.05);
         }
+
+        /* ---------- Impressum ---------- */
+        details.impressum {
+            margin-top: 10vh;          /* Abstand nach unten */
+            width: 80%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 0.9em;          /* etwas kleiner als Standardtext */
+            color: rgb(203, 203, 203);
+        }
+        details.impressum summary {
+            list-style: none;          /* Pfeil ausblenden, wirkt „cleaner“ */
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        details.impressum summary:hover {
+            color: rgb(255, 255, 255);
+        }
+        details.impressum[open] {      /* Rahmen nur, wenn ausgeklappt */
+            border: 2px solid rgb(203, 203, 203);
+            padding: 15px;
+        }
+        details.impressum pre {
+            white-space: pre-wrap;     /* lange Zeilen umbrechen */
+            margin: 0;
+        }
+    </style>
+</head>
+<body onscroll="scaleText()">
+    ... dein bisheriger Inhalt ...
+
+    <!-- ---------- Impressum ---------- -->
+    <details class="impressum">
+        <summary>impressum</summary>
+        <pre>
+Manuel Schieder
+Auf der Reut 3
+92670 Windischeschenbach
+Deutschland
+
+E-Mail: mail@manuelschieder.de
+
+
+Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
+
+        </pre>
+    </details>
+</body>
+</html>
+
     </style>
 </head>
 <body onscroll="scaleText()">
@@ -81,3 +134,4 @@
 
 </body>
 </html>
+
