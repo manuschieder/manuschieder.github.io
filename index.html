@@ -143,9 +143,10 @@
       padding-bottom: 1px;
       user-select: none;
       outline: none;
-      z-index: 0;
+      z-index: 0; /* important for stacking fix */
     }
 
+    /* bring active one above other content */
     .degree:hover,
     .degree:focus-visible,
     .degree.is-open {
@@ -163,7 +164,7 @@
     .tooltip {
       position: absolute;
       top: calc(100% + 12px);
-      width: min(420px, 78vw);
+      width: min(460px, 82vw);
       padding: 12px 12px;
       border-radius: 14px;
       border: 1.5px solid var(--border);
@@ -189,6 +190,20 @@
       margin-bottom: 6px;
     }
 
+    .tooltip .divider{
+      border-top: 1px solid var(--border);
+      margin: 10px 0 10px;
+      opacity: 0.9;
+    }
+
+    .tooltip ul.tiplist{
+      margin: 6px 0 0;
+      padding-left: 18px;
+    }
+    .tooltip ul.tiplist li{
+      margin: 6px 0;
+    }
+
     .degree:hover .tooltip,
     .degree:focus-visible .tooltip,
     .degree.is-open .tooltip {
@@ -197,26 +212,7 @@
       pointer-events: auto;
     }
 
-    /* --- New: seminar list under master --- */
-    .subsection {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
-    }
-    .subsection-title {
-      color: var(--muted);
-      font-size: .9rem;
-      margin: 0 0 6px;
-    }
-    .paperlist {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--text);
-    }
-    .paperlist li {
-      margin: 6px 0;
-    }
-
+    /* Impressum */
     details.impressum {
       margin: 7vh auto 2vh;
       width: 100%;
@@ -288,17 +284,16 @@
             <span class="tooltip" role="tooltip">
               <span class="label">Masterarbeit</span>
               Message in a Model: A Hybrid Approach for Synthesizing Communication Dynamics in Mobile Instant Messaging
+
+              <div class="divider"></div>
+
+              <span class="label">selected seminar papers (2025)</span>
+              <ul class="tiplist">
+                <li>Counterfactual Explanations bei Bildklassifikationen</li>
+                <li>Mapping the Adversary: A Framework for Attacks on Instant Messaging Apps</li>
+              </ul>
             </span>
           </span>
-
-          <!-- Added directly under master -->
-          <div class="subsection">
-            <p class="subsection-title">selected seminar papers (2025)</p>
-            <ul class="paperlist">
-              <li>Counterfactual Explanations bei Bildklassifikationen</li>
-              <li>Mapping the Adversary: A Framework for Attacks on Instant Messaging Apps</li>
-            </ul>
-          </div>
         </p>
 
         <p class="item" style="margin-top: 12px;">
@@ -336,20 +331,24 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
       degrees.forEach(d => { if (d !== except) d.classList.remove("is-open"); });
     }
 
+    // Choose tooltip position so it doesn't overflow viewport
     function placeTooltip(deg) {
       const tip = deg.querySelector(".tooltip");
       const wasOpen = deg.classList.contains("is-open");
 
+      // temporarily show to measure
       deg.classList.add("is-open");
       tip.style.opacity = "0";
       tip.style.pointerEvents = "none";
 
+      // default left
       deg.dataset.pos = "left";
       const rLeft = tip.getBoundingClientRect();
       const overflowRight = rLeft.right > window.innerWidth - 12;
 
       if (overflowRight) deg.dataset.pos = "right";
 
+      // cleanup
       tip.style.opacity = "";
       tip.style.pointerEvents = "";
       if (!wasOpen) deg.classList.remove("is-open");
@@ -359,6 +358,7 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
       placeTooltip(d);
       window.addEventListener("resize", () => placeTooltip(d), { passive: true });
 
+      // Click/tap toggle
       d.addEventListener("click", (e) => {
         const willOpen = !d.classList.contains("is-open");
         closeAll();
@@ -369,6 +369,7 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
         e.stopPropagation();
       });
 
+      // Keyboard accessibility
       d.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -382,9 +383,11 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
         if (e.key === "Escape") d.classList.remove("is-open");
       });
 
+      // On focus, ensure tooltip placement is correct
       d.addEventListener("focus", () => placeTooltip(d));
     });
 
+    // Click outside closes
     document.addEventListener("click", () => closeAll());
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
   </script>
