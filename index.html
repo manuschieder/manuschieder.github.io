@@ -113,7 +113,6 @@
     .box:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow);
-      border-color: color-mix(in srgb, var(--border) 70%, var(--text));
     }
 
     h2 {
@@ -131,29 +130,30 @@
       margin-bottom: 2px;
     }
 
-    /* --- Degree + Tooltip --- */
+    /* --- Degree trigger as button (clean + accessible) --- */
     .degree {
       position: relative;
       display: inline-flex;
       align-items: baseline;
       gap: 6px;
-      cursor: pointer;
+
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+
+      font: inherit;
       color: var(--text);
-      border-bottom: 1px dashed color-mix(in srgb, var(--muted) 75%, transparent);
+      cursor: pointer;
+
+      border-bottom: 1px dashed rgba(140,140,140,0.6);
       padding-bottom: 1px;
-      user-select: none;
-      outline: none;
+
       z-index: 0;
     }
 
-    /* bring active one above other content */
-    .degree:hover,
-    .degree:focus-visible,
-    .degree.is-open {
-      z-index: 9999;
-    }
-
     .degree:focus-visible {
+      outline: none;
       border-bottom-color: var(--text);
       box-shadow: var(--focus);
       border-radius: 10px;
@@ -161,7 +161,15 @@
       margin: -2px -6px;
     }
 
+    .degree:hover,
+    .degree:focus-visible,
+    .degree.is-open {
+      z-index: 9999;
+    }
+
+    /* Tooltip must be a DIV (block) */
     .tooltip {
+      display: none;
       position: absolute;
       top: calc(100% + 12px);
       width: min(460px, 82vw);
@@ -172,13 +180,6 @@
       color: var(--text);
       box-shadow: var(--shadow);
       z-index: 10000;
-
-      /* hidden by default */
-      opacity: 0;
-      transform: translateY(-6px);
-      pointer-events: none;
-      transition: opacity .16s ease, transform .16s ease;
-      text-wrap: pretty;
     }
 
     .degree[data-pos="left"] .tooltip { left: 0; }
@@ -205,13 +206,17 @@
       margin: 6px 0;
     }
 
-    /* show tooltip ONLY on hover/focus/is-open */
-    .degree:hover .tooltip,
-    .degree:focus-visible .tooltip,
+    /* Hover only on real hover devices */
+    @media (hover: hover) and (pointer: fine) {
+      .degree:hover .tooltip,
+      .degree:focus-visible .tooltip {
+        display: block;
+      }
+    }
+
+    /* Mobile: show only when tapped */
     .degree.is-open .tooltip {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
+      display: block;
     }
 
     /* Impressum */
@@ -282,10 +287,9 @@
         <p class="item">
           <small>2023 – now:</small><br>
 
-          <!-- M.Sc: tooltip contains master + seminar papers -->
-          <span class="degree" tabindex="0" aria-haspopup="true" data-pos="left">
+          <button type="button" class="degree" aria-haspopup="true" data-pos="left">
             M.Sc Wirtschaftsinformatik
-            <span class="tooltip" role="tooltip">
+            <div class="tooltip" role="tooltip">
               <span class="label">Masterarbeit</span>
               Message in a Model: A Hybrid Approach for Synthesizing Communication Dynamics in Mobile Instant Messaging
 
@@ -296,21 +300,20 @@
                 <li>Counterfactual Explanations bei Bildklassifikationen</li>
                 <li>Mapping the Adversary: A Framework for Attacks on Instant Messaging Apps</li>
               </ul>
-            </span>
-          </span>
+            </div>
+          </button>
         </p>
 
         <p class="item" style="margin-top: 12px;">
           <small>2019 – 2023:</small><br>
 
-          <!-- B.Sc: tooltip contains bachelor thesis -->
-          <span class="degree" tabindex="0" aria-haspopup="true" data-pos="left">
+          <button type="button" class="degree" aria-haspopup="true" data-pos="left">
             B.Sc Wirtschaftsinformatik
-            <span class="tooltip" role="tooltip">
+            <div class="tooltip" role="tooltip">
               <span class="label">Bachelorarbeit</span>
               Algorithm Aversion vs. Algorithm Appreciation: When do Humans Prefer Algorithms over Humans?
-            </span>
-          </span>
+            </div>
+          </button>
         </p>
       </div>
     </section>
@@ -337,28 +340,23 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
       degrees.forEach(d => { if (d !== except) d.classList.remove("is-open"); });
     }
 
-    // Choose tooltip position so it doesn't overflow viewport
     function placeTooltip(deg) {
       const tip = deg.querySelector(".tooltip");
       if (!tip) return;
 
       const wasOpen = deg.classList.contains("is-open");
 
-      // temporarily show to measure
+      // show invisibly to measure
       deg.classList.add("is-open");
-      tip.style.opacity = "0";
-      tip.style.pointerEvents = "none";
+      tip.style.visibility = "hidden";
+      tip.style.display = "block";
 
-      // default left
       deg.dataset.pos = "left";
-      const rLeft = tip.getBoundingClientRect();
-      const overflowRight = rLeft.right > window.innerWidth - 12;
+      const r = tip.getBoundingClientRect();
+      if (r.right > window.innerWidth - 12) deg.dataset.pos = "right";
 
-      if (overflowRight) deg.dataset.pos = "right";
-
-      // cleanup
-      tip.style.opacity = "";
-      tip.style.pointerEvents = "";
+      tip.style.display = "";
+      tip.style.visibility = "";
       if (!wasOpen) deg.classList.remove("is-open");
     }
 
@@ -366,7 +364,6 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
       placeTooltip(d);
       window.addEventListener("resize", () => placeTooltip(d), { passive: true });
 
-      // Tap/click toggles tooltip (important for mobile)
       d.addEventListener("click", (e) => {
         const willOpen = !d.classList.contains("is-open");
         closeAll();
@@ -377,24 +374,11 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
         e.stopPropagation();
       });
 
-      // Keyboard accessibility
       d.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          const willOpen = !d.classList.contains("is-open");
-          closeAll();
-          if (willOpen) {
-            placeTooltip(d);
-            d.classList.add("is-open");
-          }
-        }
         if (e.key === "Escape") d.classList.remove("is-open");
       });
-
-      d.addEventListener("focus", () => placeTooltip(d));
     });
 
-    // Click outside closes
     document.addEventListener("click", () => closeAll());
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
   </script>
