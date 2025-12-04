@@ -1,117 +1,282 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>manuel schieder</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>manuel schieder</title>
 
-    <style>
-        /* ---------- Grundlayout ---------- */
-        body {
-            font-family: 'Source Code Pro', monospace;
-            text-align: center;
-            --bg-color: white;             /* Standard-Hintergrund */
-            --text-color: black;            /* Standard-Text */
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.5s ease;
-        }
-        @media (prefers-color-scheme: dark) {
-            body {                          /* Dark-Mode */
-                --bg-color: rgb(0, 0, 0);
-                --text-color: white;
-            }
-        }
+  <!-- Optional: Font sauber laden (kannst du weglassen, wenn du lokal hostest) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
 
-        .name   { font-size: 8vw; margin-top: 20vh; }
-        .description { margin-top: 10px; font-size: 1em; }
+  <style>
+    :root{
+      --bg: #ffffff;
+      --text: #0b0b0b;
+      --muted: #5a5a5a;
+      --border: #d6d6d6;
+      --link: #1a1a1a;
+      --linkHover: #000000;
+      --cardBg: rgba(0,0,0,0.02);
+      --shadow: 0 8px 24px rgba(0,0,0,0.08);
+      --radius: 18px;
+      --maxw: 720px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root{
+        --bg: #000000;
+        --text: #ffffff;
+        --muted: #bdbdbd;
+        --border: #3a3a3a;
+        --link: #d7d7d7;
+        --linkHover: #ffffff;
+        --cardBg: rgba(255,255,255,0.03);
+        --shadow: 0 10px 28px rgba(0,0,0,0.55);
+      }
+    }
 
-        /* ---------- Kontaktlinks ---------- */
-        .contact {
-            margin-top: 5vh;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        .contact a {
-            margin: 10px 0; text-decoration: none;
-            color: rgb(203,203,203);
-            font-size: 1.1em; transition: color .3s ease;
-        }
-        .contact a:hover { color: rgb(255,255,255); }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      background: var(--bg);
+      color: var(--text);
+      transition: background-color .35s ease, color .35s ease;
+      line-height: 1.55;
+    }
 
-        /* ---------- Infoboxen ---------- */
-        .box {
-            border: 2px solid rgb(203,203,203);
-            padding: 15px;
-            margin: 20px auto;
-            width: 80%; max-width: 400px;
-            text-align: left;
-            transition: transform .3s ease;
-        }
-        .box:hover { transform: scale(1.05); }
+    main {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 10vh 18px 6vh;
+      text-align: center;
+    }
 
-        /* ---------- Impressum ---------- */
-        details.impressum {
-            margin: 10vh auto 5vh;          /* Abstand darüber + darunter */
-            width: 80%; max-width: 400px;
-            font-size: .9em;
-            color: rgb(203,203,203);
-        }
-        details.impressum summary {
-            list-style: none; cursor: pointer;
-            text-align: center; transition: color .3s ease;
-        }
-        details.impressum summary:hover { color: rgb(255,255,255); }
-        details.impressum[open] {
-            border: 2px solid rgb(203,203,203); padding: 15px;
-        }
-        details.impressum pre {
-            white-space: pre-wrap; margin: 0;
-        }
-    </style>
+    h1 {
+      font-size: clamp(2.4rem, 7vw, 4.4rem);
+      margin: 0 0 .6rem;
+      letter-spacing: -0.02em;
+      font-weight: 600;
+    }
+
+    .description {
+      color: var(--muted);
+      margin: 0 auto 4vh;
+      font-size: 1rem;
+      max-width: 52ch;
+    }
+
+    .contact {
+      margin: 3vh auto 5vh;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+    .contact a {
+      color: var(--link);
+      text-decoration: none;
+      font-size: 1.05rem;
+      transition: transform .2s ease, color .2s ease;
+    }
+    .contact a:hover,
+    .contact a:focus-visible {
+      color: var(--linkHover);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+      margin: 4vh auto 6vh;
+      text-align: left;
+    }
+
+    .box {
+      border: 1.5px solid var(--border);
+      background: var(--cardBg);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: none;
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .box:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+      border-color: color-mix(in srgb, var(--border) 70%, var(--text));
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: lowercase;
+    }
+
+    .item {
+      margin: 0;
+      color: var(--text);
+    }
+    .item small {
+      color: var(--muted);
+      display: inline-block;
+      margin-bottom: 2px;
+    }
+
+    /* --- Thesis Tooltip Trigger --- */
+    .degree {
+      position: relative;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      cursor: pointer;
+      color: var(--text);
+      border-bottom: 1px dashed color-mix(in srgb, var(--muted) 75%, transparent);
+      padding-bottom: 1px;
+      user-select: none;
+      outline: none;
+    }
+    .degree:focus-visible {
+      border-bottom-color: var(--text);
+    }
+
+    .tooltip {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 10px);
+      width: min(420px, 72vw);
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      z-index: 10;
+
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+      text-wrap: pretty;
+    }
+
+    .tooltip .label {
+      display: block;
+      color: var(--muted);
+      font-size: .85rem;
+      margin-bottom: 6px;
+    }
+
+    /* Show tooltip on hover/focus (Desktop) */
+    .degree:hover .tooltip,
+    .degree:focus-visible .tooltip {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Show tooltip when toggled by click/tap (Mobile) */
+    .degree.is-open .tooltip {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Impressum */
+    details.impressum {
+      margin: 7vh auto 2vh;
+      width: 100%;
+      max-width: 420px;
+      font-size: .9rem;
+      color: var(--muted);
+      border-radius: var(--radius);
+    }
+    details.impressum summary {
+      list-style: none;
+      cursor: pointer;
+      text-align: center;
+      padding: 10px 0;
+      transition: color .2s ease;
+      user-select: none;
+    }
+    details.impressum summary:hover,
+    details.impressum summary:focus-visible {
+      color: var(--text);
+      outline: none;
+    }
+    details.impressum[open] {
+      border: 1.5px solid var(--border);
+      padding: 14px 16px;
+      background: var(--cardBg);
+    }
+    details.impressum pre {
+      white-space: pre-wrap;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+      .box:hover { transform: none; }
+      .contact a:hover { transform: none; }
+    }
+  </style>
 </head>
 
-<body onscroll="scaleText()">
+<body>
+  <main>
+    <h1>manuel schieder</h1>
 
-    <!-- ---------- Hauptinhalt ---------- -->
-    <div class="name">manuel schieder</div>
-    <div class="description">
-        master student at universität regensburg for business informatics<br>
-        with focus on cryptography and cybersecurity
-    </div>
+    <p class="description">
+      master student at universität regensburg for business informatics<br>
+      with focus on cryptography and cybersecurity
+    </p>
 
-    <div class="contact">
-        <a href="mailto:mail@manuelschieder.de">mail[at]manuelschieder.de</a>
-        <a href="https://github.com/manuschieder" target="_blank">GitHub</a>
-        <a href="https://www.linkedin.com/in/manuel-schieder-70332022b/" target="_blank">LinkedIn</a>
-    </div>
+    <nav class="contact" aria-label="Kontakt">
+      <a href="mailto:mail@manuelschieder.de">mail[at]manuelschieder.de</a>
+      <a href="https://github.com/manuschieder" target="_blank" rel="noreferrer">GitHub</a>
+      <a href="https://www.linkedin.com/in/manuel-schieder-70332022b/" target="_blank" rel="noreferrer">LinkedIn</a>
+    </nav>
 
-    <div class="box">
+    <section class="grid" aria-label="Infos">
+      <div class="box">
         <h2>work experience</h2>
-        <p>2021 – 2026: hbp Consulting GmbH & Co KG</p>
-    </div>
+        <p class="item">2021 – 2026: hbp Consulting GmbH & Co KG</p>
+      </div>
 
-    <div class="box">
+      <div class="box">
         <h2>education</h2>
-        <p>
-            2023 – now:
-            <span
-              onmouseover="this.innerHTML='Masterarbeit: Message in a Model: A Hybrid Approach for Synthesizing<br>Communication Dynamics in Mobile Instant Messaging'"
-              onmouseout="this.innerHTML='M.Sc Wirtschaftsinformatik'">
-              M.Sc Wirtschaftsinformatik
-            </span>
-            <br>
-            2019 – 2023:
-            <span
-              onmouseover="this.innerHTML='Bachelorarbeit: Algorithm Aversion vs.<br>Algorithm Appreciation: When<br>do Humans Prefer Algorithms<br>over Humans?'"
-              onmouseout="this.innerHTML='B.Sc Wirtschaftsinformatik'">
-              B.Sc Wirtschaftsinformatik
-            </span>
-        </p>
-    </div>
 
-    <!-- ---------- Impressum ganz unten ---------- -->
+        <p class="item">
+          <small>2023 – now:</small><br>
+          <span class="degree" tabindex="0" aria-haspopup="true">
+            M.Sc Wirtschaftsinformatik
+            <span class="tooltip" role="tooltip">
+              <span class="label">Masterarbeit</span>
+              Message in a Model: A Hybrid Approach for Synthesizing Communication Dynamics in Mobile Instant Messaging
+            </span>
+          </span>
+        </p>
+
+        <p class="item" style="margin-top: 10px;">
+          <small>2019 – 2023:</small><br>
+          <span class="degree" tabindex="0" aria-haspopup="true">
+            B.Sc Wirtschaftsinformatik
+            <span class="tooltip" role="tooltip">
+              <span class="label">Bachelorarbeit</span>
+              Algorithm Aversion vs. Algorithm Appreciation: When do Humans Prefer Algorithms over Humans?
+            </span>
+          </span>
+        </p>
+      </div>
+    </section>
+
     <details class="impressum">
-        <summary>impressum</summary>
+      <summary>impressum</summary>
 <pre>
 Manuel Schieder
 Auf der Reut 3
@@ -123,6 +288,44 @@ E-Mail: mail@manuelschieder.de
 Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
 </pre>
     </details>
+  </main>
 
+  <script>
+    // Mobile-friendly: tap/click toggles the tooltip; click outside closes it.
+    const degrees = Array.from(document.querySelectorAll(".degree"));
+
+    function closeAll(except = null) {
+      degrees.forEach(d => {
+        if (d !== except) d.classList.remove("is-open");
+      });
+    }
+
+    degrees.forEach(d => {
+      d.addEventListener("click", (e) => {
+        // Toggle this one, close others:
+        const willOpen = !d.classList.contains("is-open");
+        closeAll();
+        if (willOpen) d.classList.add("is-open");
+        e.stopPropagation();
+      });
+
+      d.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          const willOpen = !d.classList.contains("is-open");
+          closeAll();
+          if (willOpen) d.classList.add("is-open");
+        }
+        if (e.key === "Escape") {
+          d.classList.remove("is-open");
+        }
+      });
+    });
+
+    document.addEventListener("click", () => closeAll());
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeAll();
+    });
+  </script>
 </body>
 </html>
