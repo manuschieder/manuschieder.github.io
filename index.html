@@ -90,7 +90,6 @@
     }
     .contact a:focus-visible { box-shadow: var(--focus); border-radius: 8px; padding: 2px 6px; }
 
-    /* Grid: 1 column on mobile, 2 columns on larger screens */
     .grid {
       display: grid;
       gap: 16px;
@@ -144,12 +143,9 @@
       padding-bottom: 1px;
       user-select: none;
       outline: none;
-
-      /* IMPORTANT: do NOT isolate stacking context */
       z-index: 0;
     }
 
-    /* bring active one above other content (fixes "seeing through" issue) */
     .degree:hover,
     .degree:focus-visible,
     .degree.is-open {
@@ -183,9 +179,7 @@
       text-wrap: pretty;
     }
 
-    /* default anchor to left */
     .degree[data-pos="left"] .tooltip { left: 0; }
-    /* anchor to right if needed */
     .degree[data-pos="right"] .tooltip { right: 0; }
 
     .tooltip .label {
@@ -203,7 +197,26 @@
       pointer-events: auto;
     }
 
-    /* Impressum */
+    /* --- New: seminar list under master --- */
+    .subsection {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .subsection-title {
+      color: var(--muted);
+      font-size: .9rem;
+      margin: 0 0 6px;
+    }
+    .paperlist {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--text);
+    }
+    .paperlist li {
+      margin: 6px 0;
+    }
+
     details.impressum {
       margin: 7vh auto 2vh;
       width: 100%;
@@ -277,9 +290,18 @@
               Message in a Model: A Hybrid Approach for Synthesizing Communication Dynamics in Mobile Instant Messaging
             </span>
           </span>
+
+          <!-- Added directly under master -->
+          <div class="subsection">
+            <p class="subsection-title">selected seminar papers (2025)</p>
+            <ul class="paperlist">
+              <li>Counterfactual Explanations bei Bildklassifikationen</li>
+              <li>Mapping the Adversary: A Framework for Attacks on Instant Messaging Apps</li>
+            </ul>
+          </div>
         </p>
 
-        <p class="item" style="margin-top: 10px;">
+        <p class="item" style="margin-top: 12px;">
           <small>2019 – 2023:</small><br>
           <span class="degree" tabindex="0" aria-haspopup="true" data-pos="left">
             B.Sc Wirtschaftsinformatik
@@ -314,24 +336,20 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
       degrees.forEach(d => { if (d !== except) d.classList.remove("is-open"); });
     }
 
-    // Choose tooltip position so it doesn't overflow viewport
     function placeTooltip(deg) {
       const tip = deg.querySelector(".tooltip");
       const wasOpen = deg.classList.contains("is-open");
 
-      // temporarily show to measure
       deg.classList.add("is-open");
       tip.style.opacity = "0";
       tip.style.pointerEvents = "none";
 
-      // default left
       deg.dataset.pos = "left";
       const rLeft = tip.getBoundingClientRect();
       const overflowRight = rLeft.right > window.innerWidth - 12;
 
       if (overflowRight) deg.dataset.pos = "right";
 
-      // cleanup
       tip.style.opacity = "";
       tip.style.pointerEvents = "";
       if (!wasOpen) deg.classList.remove("is-open");
@@ -339,10 +357,8 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
 
     degrees.forEach(d => {
       placeTooltip(d);
-
       window.addEventListener("resize", () => placeTooltip(d), { passive: true });
 
-      // Click/tap toggle
       d.addEventListener("click", (e) => {
         const willOpen = !d.classList.contains("is-open");
         closeAll();
@@ -353,7 +369,6 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
         e.stopPropagation();
       });
 
-      // Keyboard accessibility
       d.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -367,11 +382,9 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
         if (e.key === "Escape") d.classList.remove("is-open");
       });
 
-      // On focus, ensure tooltip placement is correct
       d.addEventListener("focus", () => placeTooltip(d));
     });
 
-    // Click outside closes
     document.addEventListener("click", () => closeAll());
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
   </script>
