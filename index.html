@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>manuel schieder</title>
 
-  <!-- Optional: Font sauber laden (kannst du weglassen, wenn du lokal hostest) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
@@ -19,9 +18,10 @@
       --link: #1a1a1a;
       --linkHover: #000000;
       --cardBg: rgba(0,0,0,0.02);
-      --shadow: 0 8px 24px rgba(0,0,0,0.08);
+      --shadow: 0 10px 28px rgba(0,0,0,0.10);
       --radius: 18px;
-      --maxw: 720px;
+      --maxw: 840px;
+      --focus: 0 0 0 3px rgba(120,120,120,0.25);
     }
     @media (prefers-color-scheme: dark) {
       :root{
@@ -32,7 +32,8 @@
         --link: #d7d7d7;
         --linkHover: #ffffff;
         --cardBg: rgba(255,255,255,0.03);
-        --shadow: 0 10px 28px rgba(0,0,0,0.55);
+        --shadow: 0 12px 34px rgba(0,0,0,0.6);
+        --focus: 0 0 0 3px rgba(255,255,255,0.18);
       }
     }
 
@@ -55,7 +56,7 @@
     }
 
     h1 {
-      font-size: clamp(2.4rem, 7vw, 4.4rem);
+      font-size: clamp(2.4rem, 7vw, 4.6rem);
       margin: 0 0 .6rem;
       letter-spacing: -0.02em;
       font-weight: 600;
@@ -65,7 +66,7 @@
       color: var(--muted);
       margin: 0 auto 4vh;
       font-size: 1rem;
-      max-width: 52ch;
+      max-width: 58ch;
     }
 
     .contact {
@@ -87,12 +88,19 @@
       transform: translateY(-1px);
       outline: none;
     }
+    .contact a:focus-visible { box-shadow: var(--focus); border-radius: 8px; padding: 2px 6px; }
 
+    /* Grid: 1 column on mobile, 2 columns on larger screens */
     .grid {
       display: grid;
       gap: 16px;
       margin: 4vh auto 6vh;
       text-align: left;
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+    @media (min-width: 860px) {
+      .grid { grid-template-columns: 1fr 1fr; }
     }
 
     .box {
@@ -117,17 +125,14 @@
       text-transform: lowercase;
     }
 
-    .item {
-      margin: 0;
-      color: var(--text);
-    }
+    .item { margin: 0; color: var(--text); }
     .item small {
       color: var(--muted);
       display: inline-block;
       margin-bottom: 2px;
     }
 
-    /* --- Thesis Tooltip Trigger --- */
+    /* --- Degree + Tooltip --- */
     .degree {
       position: relative;
       display: inline-flex;
@@ -139,30 +144,39 @@
       padding-bottom: 1px;
       user-select: none;
       outline: none;
+      isolation: isolate;
     }
     .degree:focus-visible {
       border-bottom-color: var(--text);
+      box-shadow: var(--focus);
+      border-radius: 10px;
+      padding: 2px 6px;
+      margin: -2px -6px;
     }
 
     .tooltip {
       position: absolute;
-      left: 0;
-      top: calc(100% + 10px);
-      width: min(420px, 72vw);
+      top: calc(100% + 12px);
+      width: min(420px, 78vw);
       padding: 12px 12px;
       border-radius: 14px;
       border: 1.5px solid var(--border);
       background: var(--bg);
       color: var(--text);
       box-shadow: var(--shadow);
-      z-index: 10;
+      z-index: 50;
 
       opacity: 0;
       transform: translateY(-6px);
       pointer-events: none;
-      transition: opacity .18s ease, transform .18s ease;
+      transition: opacity .16s ease, transform .16s ease;
       text-wrap: pretty;
     }
+
+    /* default anchor to left */
+    .degree[data-pos="left"] .tooltip { left: 0; }
+    /* anchor to right if needed */
+    .degree[data-pos="right"] .tooltip { right: 0; }
 
     .tooltip .label {
       display: block;
@@ -171,15 +185,8 @@
       margin-bottom: 6px;
     }
 
-    /* Show tooltip on hover/focus (Desktop) */
     .degree:hover .tooltip,
-    .degree:focus-visible .tooltip {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-
-    /* Show tooltip when toggled by click/tap (Mobile) */
+    .degree:focus-visible .tooltip,
     .degree.is-open .tooltip {
       opacity: 1;
       transform: translateY(0);
@@ -253,7 +260,7 @@
 
         <p class="item">
           <small>2023 – now:</small><br>
-          <span class="degree" tabindex="0" aria-haspopup="true">
+          <span class="degree" tabindex="0" aria-haspopup="true" data-pos="left">
             M.Sc Wirtschaftsinformatik
             <span class="tooltip" role="tooltip">
               <span class="label">Masterarbeit</span>
@@ -264,7 +271,7 @@
 
         <p class="item" style="margin-top: 10px;">
           <small>2019 – 2023:</small><br>
-          <span class="degree" tabindex="0" aria-haspopup="true">
+          <span class="degree" tabindex="0" aria-haspopup="true" data-pos="left">
             B.Sc Wirtschaftsinformatik
             <span class="tooltip" role="tooltip">
               <span class="label">Bachelorarbeit</span>
@@ -291,41 +298,76 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
   </main>
 
   <script>
-    // Mobile-friendly: tap/click toggles the tooltip; click outside closes it.
     const degrees = Array.from(document.querySelectorAll(".degree"));
 
     function closeAll(except = null) {
-      degrees.forEach(d => {
-        if (d !== except) d.classList.remove("is-open");
-      });
+      degrees.forEach(d => { if (d !== except) d.classList.remove("is-open"); });
+    }
+
+    // Choose tooltip position so it doesn't overflow viewport
+    function placeTooltip(deg) {
+      // Temporarily show invisibly to measure
+      const tip = deg.querySelector(".tooltip");
+      const wasOpen = deg.classList.contains("is-open");
+      deg.classList.add("is-open");
+      tip.style.opacity = "0";
+      tip.style.pointerEvents = "none";
+
+      // default left, check overflow
+      deg.dataset.pos = "left";
+      const rLeft = tip.getBoundingClientRect();
+      const overflowRight = rLeft.right > window.innerWidth - 12;
+
+      // try right if overflow
+      if (overflowRight) {
+        deg.dataset.pos = "right";
+      }
+
+      // cleanup
+      tip.style.opacity = "";
+      tip.style.pointerEvents = "";
+      if (!wasOpen) deg.classList.remove("is-open");
     }
 
     degrees.forEach(d => {
+      // initial placement
+      placeTooltip(d);
+
+      // Recompute on resize (responsive)
+      window.addEventListener("resize", () => placeTooltip(d), { passive: true });
+
+      // Click/tap toggle
       d.addEventListener("click", (e) => {
-        // Toggle this one, close others:
         const willOpen = !d.classList.contains("is-open");
         closeAll();
-        if (willOpen) d.classList.add("is-open");
+        if (willOpen) {
+          placeTooltip(d);
+          d.classList.add("is-open");
+        }
         e.stopPropagation();
       });
 
+      // Keyboard accessibility
       d.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           const willOpen = !d.classList.contains("is-open");
           closeAll();
-          if (willOpen) d.classList.add("is-open");
+          if (willOpen) {
+            placeTooltip(d);
+            d.classList.add("is-open");
+          }
         }
-        if (e.key === "Escape") {
-          d.classList.remove("is-open");
-        }
+        if (e.key === "Escape") d.classList.remove("is-open");
       });
+
+      // On focus, make sure tooltip placement is correct
+      d.addEventListener("focus", () => placeTooltip(d));
     });
 
+    // Click outside closes
     document.addEventListener("click", () => closeAll());
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeAll();
-    });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
   </script>
 </body>
 </html>
