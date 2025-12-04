@@ -144,8 +144,18 @@
       padding-bottom: 1px;
       user-select: none;
       outline: none;
-      isolation: isolate;
+
+      /* IMPORTANT: do NOT isolate stacking context */
+      z-index: 0;
     }
+
+    /* bring active one above other content (fixes "seeing through" issue) */
+    .degree:hover,
+    .degree:focus-visible,
+    .degree.is-open {
+      z-index: 9999;
+    }
+
     .degree:focus-visible {
       border-bottom-color: var(--text);
       box-shadow: var(--focus);
@@ -164,7 +174,7 @@
       background: var(--bg);
       color: var(--text);
       box-shadow: var(--shadow);
-      z-index: 50;
+      z-index: 10000;
 
       opacity: 0;
       transform: translateY(-6px);
@@ -306,22 +316,20 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
 
     // Choose tooltip position so it doesn't overflow viewport
     function placeTooltip(deg) {
-      // Temporarily show invisibly to measure
       const tip = deg.querySelector(".tooltip");
       const wasOpen = deg.classList.contains("is-open");
+
+      // temporarily show to measure
       deg.classList.add("is-open");
       tip.style.opacity = "0";
       tip.style.pointerEvents = "none";
 
-      // default left, check overflow
+      // default left
       deg.dataset.pos = "left";
       const rLeft = tip.getBoundingClientRect();
       const overflowRight = rLeft.right > window.innerWidth - 12;
 
-      // try right if overflow
-      if (overflowRight) {
-        deg.dataset.pos = "right";
-      }
+      if (overflowRight) deg.dataset.pos = "right";
 
       // cleanup
       tip.style.opacity = "";
@@ -330,10 +338,8 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
     }
 
     degrees.forEach(d => {
-      // initial placement
       placeTooltip(d);
 
-      // Recompute on resize (responsive)
       window.addEventListener("resize", () => placeTooltip(d), { passive: true });
 
       // Click/tap toggle
@@ -361,7 +367,7 @@ Verantwortlich nach § 5 DDG und § 18 Abs. 2 MStV: Manuel Schieder
         if (e.key === "Escape") d.classList.remove("is-open");
       });
 
-      // On focus, make sure tooltip placement is correct
+      // On focus, ensure tooltip placement is correct
       d.addEventListener("focus", () => placeTooltip(d));
     });
 
